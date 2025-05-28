@@ -1,0 +1,200 @@
+CREATE DATABASE IF NOT EXISTS NETFLIX_rec;
+USE NETFLIX_rec;
+
+CREATE TABLE Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    signup_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Movies (
+    movie_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    release_year INT,
+    rating DECIMAL(3,1),
+    duration INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Ratings (
+    rating_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    movie_id INT,
+    rating DECIMAL(2,1),
+    rated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id)
+);
+
+CREATE TABLE Genres (
+    genre_id INT AUTO_INCREMENT PRIMARY KEY,
+    genre_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Movie_Genres (
+    movie_id INT,
+    genre_id INT,
+    PRIMARY KEY(movie_id, genre_id),
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id),
+    FOREIGN KEY (genre_id) REFERENCES Genres(genre_id)
+);
+
+CREATE TABLE Recommendations (
+    recommendation_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    movie_id INT,
+    recommended_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id)
+);
+
+CREATE TABLE WatchHistory (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    movie_id INT,
+    watch_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id)
+);
+
+CREATE TABLE Review (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    movie_id INT,
+    review_text TEXT,
+    review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id)
+);
+
+INSERT INTO Users (user_id, username, email, password, signup_date) VALUES
+(1, 'kabir_thapar', 'kabir@example.com', 'pass123', '2024-01-15 14:12:33'),
+(2, 'arjun_verma', 'arjun@example.com', 'pass456', '2024-02-20 10:25:48'),
+(3, 'yash_kapoor', 'yash@example.com', 'pass789', '2024-03-10 08:47:12'),
+(4, 'tara_sharma', 'tara@example.com', 'pass321', '2024-04-05 17:32:00'),
+(5, 'nick_miller', 'nick@example.com', 'pass654', '2024-05-14 21:10:45');
+
+
+INSERT INTO Movies (movie_id, title, description, release_year, rating, duration, created_at) VALUES
+(1, 'Inception', 'A mind-bending thriller by Christopher Nolan', 2010, 8.8, 148, '2023-06-01 12:00:00'),
+(2, 'The Matrix', 'A sci-fi classic', 1999, 8.7, 136, '2023-06-01 12:00:00'),
+(3, 'Titanic', 'A romance-drama based on the sinking of Titanic', 1997, 7.8, 195, '2023-06-01 12:00:00'),
+(4, 'The Dark Knight', 'Batman battles the Joker in this action thriller', 2008, 9.0, 152, '2023-06-01 12:00:00'),
+(5, 'Avengers: Endgame', 'The ultimate superhero movie', 2019, 8.4, 181, '2023-06-01 12:00:00'),
+(6, 'Interstellar', 'A journey through space and time', 2014, 8.6, 169, '2023-06-01 12:00:00'),
+(7, 'The Godfather', 'Crime drama following a mafia family', 1972, 9.2, 175, '2023-06-01 12:00:00'),
+(8, 'Forrest Gump', 'Life story of an extraordinary man', 1994, 8.8, 142, '2023-06-01 12:00:00'),
+(9, 'Gladiator', 'A general becomes a gladiator to avenge his family', 2000, 8.5, 155, '2023-06-01 12:00:00'),
+(10, 'Pulp Fiction', 'A series of interconnected stories in a crime setting', 1994, 8.9, 154, '2023-06-01 12:00:00');
+
+
+INSERT INTO Ratings (rating_id, user_id, movie_id, rating, rated_at) VALUES
+(1, 1, 1, 9.0, '2024-06-10 14:12:00'),
+(2, 1, 2, 8.5, '2024-06-10 14:15:00'),
+(3, 2, 3, 8.0, '2024-06-11 10:30:00'),
+(4, 3, 4, 9.0, '2024-06-12 12:00:00'),
+(5, 2, 5, 8.2, '2024-06-12 18:00:00');
+
+INSERT INTO Genres (genre_id, genre_name) VALUES
+(1, 'Action'),
+(2, 'Drama'),
+(3, 'Comedy'),
+(4, 'Sci-Fi'),
+(5, 'Romance'),
+(6, 'Thriller'),
+(7, 'Adventure'),
+(8, 'Crime'),
+(9, 'Fantasy'),
+(10, 'Animation');
+
+
+INSERT INTO Movie_Genres (movie_id, genre_id) VALUES
+(1, 4), (1, 6),
+(2, 4), (2, 6),
+(3, 2), (3, 5),
+(4, 1), (4, 6),
+(5, 1), (5, 7);
+
+
+INSERT INTO Recommendations (recommendation_id, user_id, movie_id, recommended_at) VALUES
+(1, 1, 3, '2024-06-15 10:00:00'),
+(2, 1, 5, '2024-06-15 10:05:00'),
+(3, 2, 1, '2024-06-16 08:30:00'),
+(4, 3, 2, '2024-06-17 09:00:00'),
+(5, 4, 4, '2024-06-18 11:15:00');
+
+
+INSERT INTO WatchHistory (user_id, movie_id, watch_date) VALUES
+(1, 1, '2024-06-10 13:00:00'),
+(1, 2, '2024-06-10 13:45:00'),
+(2, 3, '2024-06-11 09:00:00'),
+(3, 4, '2024-06-12 11:00:00');
+
+
+INSERT INTO Review (user_id, movie_id, review_text, review_date) VALUES
+(1, 1, 'Inception was mind-blowing!', '2024-06-10 15:00:00'),
+(2, 3, 'Titanic was emotionally powerful.', '2024-06-11 12:00:00');
+
+
+SELECT * FROM Users;
+
+SELECT * FROM Movies;
+
+SELECT * FROM WatchHistory;
+
+SELECT * FROM Ratings;
+
+SELECT * FROM Review;
+
+SELECT m.title, wh.watch_date 
+FROM WatchHistory wh
+JOIN Movies m ON wh.movie_id = m.movie_id
+WHERE wh.user_id = 1;
+
+SELECT m.title, AVG(r.rating) AS average_rating
+FROM Ratings r
+JOIN Movies m ON r.movie_id = m.movie_id
+GROUP BY m.title
+HAVING AVG(r.rating) > 4.0
+ORDER BY average_rating DESC;
+
+
+SELECT m.title, COUNT(wh.history_id) AS view_count
+FROM Movies m
+JOIN WatchHistory wh ON m.movie_id = wh.movie_id
+GROUP BY m.title
+ORDER BY view_count DESC;
+
+SELECT g.genre_name, COUNT(wh.history_id) AS genre_popularity
+FROM WatchHistory wh
+JOIN Movies m ON wh.movie_id = m.movie_id
+JOIN Movie_Genres mg ON m.movie_id = mg.movie_id
+JOIN Genres g ON mg.genre_id = g.genre_id
+GROUP BY g.genre_name
+ORDER BY genre_popularity DESC;
+
+
+ALTER TABLE Movies ADD director VARCHAR(100);
+UPDATE Movies SET director = 'Christopher Nolan' WHERE title IN ('Inception', 'Interstellar');
+
+SELECT m.title 
+FROM Movies m
+WHERE m.director = 'Christopher Nolan'
+  AND m.movie_id NOT IN (
+      SELECT movie_id 
+      FROM WatchHistory 
+      WHERE user_id = 2
+  );
+
+SELECT u.username, g.genre_name, MAX(r.rating) AS max_rating
+FROM Ratings r
+JOIN Users u ON r.user_id = u.user_id
+JOIN Movies m ON r.movie_id = m.movie_id
+JOIN Movie_Genres mg ON m.movie_id = mg.movie_id
+JOIN Genres g ON mg.genre_id = g.genre_id
+GROUP BY u.username, g.genre_name;
